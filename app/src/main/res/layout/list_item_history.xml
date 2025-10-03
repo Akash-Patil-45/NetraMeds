@@ -1,0 +1,51 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="12dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/medicine_image"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/placeholder_medicine_box"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"/>
+
+    <!-- CORRECTED: Attributes are now inside the opening tag -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <TextView
+            android:id="@+id/medicine_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paracetamol"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/medicine_exp_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exp: 03/2025"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/speak_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_volume_up"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/read_aloud"
+        tools:ignore="HardcodedText" />
+</LinearLayout>
