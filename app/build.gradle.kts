@@ -1,7 +1,9 @@
-// The commented-out section at the top can be removed for cleanliness.
-plugins {alias(libs.plugins.android.application)
+plugins {
+    alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt) // This should now work correctly
+    alias(libs.plugins.kotlin.kapt)
+    id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -18,8 +20,7 @@ android {
     }
 
     buildFeatures {
-        // The recommended way to enable dataBinding is now within buildFeatures.
-        // This is correct.
+        // Correctly enabled dataBinding and viewBinding
         dataBinding = true
         viewBinding = true
     }
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation("androidx.concurrent:concurrent-futures-ktx:1.1.0")
 
     // Jetpack Navigation
     implementation(libs.navigation.fragment.ktx)
@@ -65,14 +67,13 @@ dependencies {
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
 
-    // The databinding compiler is automatically applied when dataBinding is enabled.
-    // You can safely REMOVE the following line as it's redundant.
-    // kapt("androidx.databinding:databinding-compiler:8.4.2")
+
 
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.google.auth) // This should be 'libs.play.services.auth' from your version catalog
 
     // CameraX
     implementation(libs.camera.core)
@@ -82,9 +83,8 @@ dependencies {
 
     // ML Kit
     implementation(libs.mlkit.text.recognition)
-    implementation("com.google.android.gms:play-services-base:18.4.0") // <-- ADD THIS LINE
-
-    // Co
+    // REMOVED: Redundant dependency, as it's a transitive dependency of other Play Services libraries.
+    // implementation("com.google.android.gms:play-services-base:18.4.0")
 
     // Coil Image Loading
     implementation(libs.coil)
@@ -93,5 +93,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+//    implementation("androidx.room:room-runtime:2.6.1")
+//    implementation("androidx.room:room-ktx:2.6.1")
+//    ksp("androidx.room:room-compiler:2.6.1") // Use ksp instead of kapt
+
+// Use ksp instead of kapt
+
+// Use ksp instead of kapt
+
 }
-    

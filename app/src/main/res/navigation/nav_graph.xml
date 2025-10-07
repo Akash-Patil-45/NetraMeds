@@ -3,30 +3,221 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">  <!--  CHANGE THIS LINE -->
+    app:startDestination="@id/loginFragment">
 
-    <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.akash.netrameds.auth.SignUpFragment"
-        android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up">
-
-        <action
-            android:id="@+id/action_signUpFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-
-    </fragment>
-
+    <!-- Authentication: Login Fragment -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.akash.netrameds.auth.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
 
+        <!-- Action to navigate from Login to Home after a successful login -->
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- Action to navigate from Login to Sign Up -->
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+    </fragment>
+
+    <!-- Authentication: Sign Up Fragment -->
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.akash.netrameds.auth.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up">
+        <!-- Optional: Add an action to go back to Login if needed -->
+        <!-- <action android:id="@+id/action_signUpFragment_to_loginFragment"
+                 app:destination="@id/loginFragment" /> -->
+    </fragment>
+
+    <!-- Main App: Home Fragment -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.akash.netrameds.features.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+
+        <!-- Action to navigate from Home to Settings -->
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+
+        <!-- Actions for the module cards -->
+        <action
+            android:id="@+id/action_homeFragment_to_scanFragment"
+            app:destination="@id/scanFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_alarmsFragment"
+            app:destination="@id/alarmsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_medicineHistoryFragment"
+            app:destination="@id/medicineHistoryFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_supportFragment"
+            app:destination="@id/supportFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_scanMedicineFragment"
+            app:destination="@id/scanMedicineFragment" />
+        <!-- ADD THIS ACTION to go to the Create Alarm page -->
+        <action
+            android:id="@+id/action_homeFragment_to_createAlarmFragment"
+            app:destination="@id/createAlarmFragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/createAlarmFragment"
+        android:name="com.akash.netrameds.features.alarm.CreateAlarmFragment"
+        android:label="fragment_create_alarm"
+        tools:layout="@layout/fragment_create_alarm" >
+    <action
+        android:id="@+id/action_createAlarmFragment_to_addMedicineNameFragment"
+        app:destination="@id/addMedicineNameFragment" />
+    </fragment>
+
+    <!-- Placeholder fragment for Settings -->
+
+
+
+
+    <fragment
+        android:id="@+id/addMedicineNameFragment"
+        android:name="com.akash.netrameds.features.alarm.AddMedicineNameFragment"
+        android:label="fragment_add_medicine_name"
+        tools:layout="@layout/fragment_add_medicine_name" >
+    <action
+        android:id="@+id/action_addMedicineNameFragment_to_selectMedicineTypeFragment"
+        app:destination="@id/selectMedicineTypeFragment" />
+
+</fragment>
+
+    <fragment
+        android:id="@+id/selectMedicineTypeFragment"
+        android:name="com.akash.netrameds.features.alarm.SelectMedicineTypeFragment"
+        android:label="fragment_select_medicine_type"
+        tools:layout="@layout/fragment_select_medicine_type">
+
+        <!-- Define the argument to receive the medicine name -->
+        <argument
+            android:name="medicineName"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_selectMedicineTypeFragment_to_addDosageFragment"
+            app:destination="@id/addDosageFragment" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addDosageFragment"
+        android:name="com.akash.netrameds.features.alarm.AddDosageFragment"
+        android:label="fragment_add_dosage"
+        tools:layout="@layout/fragment_add_dosage">
+
+        <!-- Define arguments to receive data -->
+        <argument
+            android:name="medicineName"
+            app:argType="string" />
+        <argument
+            android:name="medicineType"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_addDosageFragment_to_selectScheduleFragment"
+            app:destination="@id/selectScheduleFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectScheduleFragment"
+        android:name="com.akash.netrameds.features.alarm.SelectScheduleFragment"
+        android:label="fragment_select_schedule"
+        tools:layout="@layout/fragment_select_schedule">
+
+        <!-- Define arguments to receive data -->
+        <argument
+            android:name="medicineName"
+            app:argType="string" />
+        <argument
+            android:name="medicineType"
+            app:argType="string" />
+        <argument
+            android:name="dosage"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_selectScheduleFragment_to_dosageTimesFragment"
+            app:destination="@id/dosageTimesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dosageTimesFragment"
+        android:name="com.akash.netrameds.features.alarm.DosageTimesFragment"
+        android:label="fragment_dosage_times"
+        tools:layout="@layout/fragment_dosage_times">
+
+        <!-- Define arguments to receive data -->
+        <argument android:name="medicineName" app:argType="string" />
+        <argument android:name="medicineType" app:argType="string" />
+        <argument android:name="dosage" app:argType="string" />
+        <argument android:name="selectedDays" app:argType="string[]" />
+        <action
+            android:id="@+id/action_dosageTimesFragment_to_summaryFragment"
+            app:destination="@id/summaryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/summaryFragment"
+        android:name="com.akash.netrameds.features.alarm.SummaryFragment"
+        android:label="SummaryFragment"
+        tools:layout="@layout/fragment_summary">
+        <argument android:name="medicineName" app:argType="string" />
+        <argument android:name="medicineType" app:argType="string" />
+        <argument android:name="dosage" app:argType="string" />
+        <argument android:name="selectedDays" app:argType="string[]" />
+        <argument android:name="alarmTimes" app:argType="string[]" />
+        <action
+            android:id="@+id/action_summaryFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.akash.netrameds.features.settings.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/scanMedicineFragment"
+        android:name="com.akash.netrameds.features.scan.ScanMedicineFragment"
+        android:label="fragment_scan_medicine"
+        tools:layout="@layout/fragment_scan_medicine" />
+
+
+    <!-- Placeholder fragments for the modules -->
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="com.akash.netrameds.features.scan.ScanFragment"
+        android:label="ScanFragment" />
+    <fragment
+        android:id="@+id/alarmsFragment"
+        android:name="com.akash.netrameds.features.alarms.AlarmsFragment"
+        android:label="AlarmsFragment" />
+    <fragment
+        android:id="@+id/medicineHistoryFragment"
+        android:name="com.akash.netrameds.features.history.MedicineHistoryFragment"
+        android:label="fragment_medicine_history"
+        tools:layout="@layout/fragment_medicine_history" />
+
+    <fragment
+        android:id="@+id/supportFragment"
+        android:name="com.akash.netrameds.features.support.SupportFragment"
+        android:label="SupportFragment" />
 
 </navigation>

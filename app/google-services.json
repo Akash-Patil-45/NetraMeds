@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "993801040355",
+    "project_id": "netrameds",
+    "storage_bucket": "netrameds.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993801040355:android:a719ab0a4ae40569c670d6",
+        "android_client_info": {
+          "package_name": "com.akash.netrameds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993801040355-66b7hn5nmlf63pvdi536ahan03sfhu94.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALZhs4tR0bgG6qGT9yINgt0wZuVa27GdY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993801040355-66b7hn5nmlf63pvdi536ahan03sfhu94.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

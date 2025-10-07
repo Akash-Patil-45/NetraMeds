@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Basic & Theming Colors -->
+    <color name="purple_200">#FFBB86FC</color><color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Custom App Colors -->
     <color name="primary_blue">#1A73E8</color>
     <color name="light_gray">#F0F0F0</color>
     <color name="text_color_primary">#333333</color>
     <color name="text_color_secondary">#757575</color>
+
+    <!-- Light Theme Colors -->
+    <color name="my_light_primary">#6200EE</color> <!-- Example: A deep purple -->
+    <color name="my_light_primary_variant">#3700B3</color> <!-- A darker purple -->
+    <color name="my_light_onPrimary">#FFFFFF</color> <!-- Text on primary color (white) -->
+
+    <!-- Green Theme Colors -->
+    <color name="light_green_background">#E8F5E9</color> <!-- A very light, soft green -->
+    <color name="light_green_card">#FFFFFF</color> <!-- White cards will contrast nicely -->
 </resources>

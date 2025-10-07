@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
-        android:title="@string/title_home" />
-
+        android:title="Home" />
     <item
-        android:id="@+id/navigation_history"
+        android:id="@+id/nav_scan"
+        android:icon="@drawable/ic_scan"
+        android:title="Scan" />
+    <item
+        android:id="@+id/nav_alarms"
+        android:icon="@drawable/ic_alarms"
+        android:title="Alarms" />
+    <item
+        android:id="@+id/nav_history"
         android:icon="@drawable/ic_history"
-        android:title="@string/title_history" />
-
+        android:title="History" />
     <item
-        android:id="@+id/navigation_set_reminder"
-        android:icon="@drawable/ic_set_reminder"
-        android:title="@string/title_set_reminder" />
-
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Setting" />
 </menu>

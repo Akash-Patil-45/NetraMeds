@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="12dp"
+    android:layout_marginTop="16dp">
+
+    <TextView
+        android:id="@+id/dose_number_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time 1"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        app:drawableStartCompat="@drawable/ic_time"
+        android:drawablePadding="16dp"
+        android:gravity="center_vertical"
+        android:layout_weight="1"/>
+
+    <NumberPicker
+        android:id="@+id/hour_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.NumberPicker"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=":"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginHorizontal="4dp"/>
+
+    <NumberPicker
+        android:id="@+id/minute_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.NumberPicker"/>
+
+    <NumberPicker
+        android:id="@+id/am_pm_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:theme="@style/AppTheme.NumberPicker"/>
+
+</LinearLayout>
