@@ -1,5 +1,6 @@
 package com.akash.netrameds.features.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,66 +9,81 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.akash.netrameds.R
+import com.akash.netrameds.auth.AuthActivity
 import com.akash.netrameds.databinding.FragmentHomeBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
+/**
+ * HomeFragment displays the main dashboard screen after user login.
+ * It contains navigation options to various app features like
+ * Medicine Recognition, Smart Alarm, Settings, etc.
+ */
 class HomeFragment : Fragment() {
 
-    // Use nullable _binding to handle the view lifecycle
+    // View binding variable (nullable to handle lifecycle safely)
     private var _binding: FragmentHomeBinding? = null
-    // This property is only valid between onCreateView and onDestroyView.
+
+    // Non-nullable getter to access binding safely
     private val binding get() = _binding!!
 
+    /**
+     * Called to inflate the layout for this fragment.
+     * The binding object connects the XML layout with Kotlin code.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment using view binding
+        // Inflate the layout using view binding
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    /**
+     * Called immediately after onCreateView().
+     * All view-related logic (like click listeners) should go here.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // --- Set up Click Listeners for the Cards ---
+        // --- Click listener for Settings button ---
+        // Navigates user to the Settings screen (SettingsFragment)
+        binding.settingsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+        }
 
-        // This is the primary action: navigating to the scan page
+        // --- Click listener for Medicine Recognition card ---
+        // Navigates to Scan Medicine feature
         binding.medicineRecognitionCard.setOnClickListener {
-            // Use the NavController to go from Home to Scan.
-            // Ensure this action exists in your res/navigation/nav_graph.xml
             findNavController().navigate(R.id.action_homeFragment_to_scanMedicineFragment)
         }
 
-        // --- Other Click Listeners for UI elements ---
-
-        binding.settingsButton.setOnClickListener {
-            // Placeholder for settings navigation or action
-            Toast.makeText(requireContext(), "Settings clicked!", Toast.LENGTH_SHORT).show()
-        }
-
+        // --- Click listener for Medicine History card ---
+        // Currently shows a simple toast message (can be updated later)
         binding.medicineHistoryCard.setOnClickListener {
-            // Placeholder for medicine history navigation
             Toast.makeText(requireContext(), "Medicine History clicked!", Toast.LENGTH_SHORT).show()
         }
 
+        // --- Click listener for Smart Alarm card ---
+        // Navigates to Create Alarm screen
         binding.smartAlarmCard.setOnClickListener {
-            // Use the new action to navigate to the CreateAlarmFragment
             findNavController().navigate(R.id.action_homeFragment_to_createAlarmFragment)
         }
 
+        // --- Click listener for Support card ---
+        // Currently shows a toast; can later open Support screen or contact form
         binding.supportCard.setOnClickListener {
-            // Placeholder for support feature
             Toast.makeText(requireContext(), "Support clicked!", Toast.LENGTH_SHORT).show()
         }
-
-
-        // --- Handle Bottom Navigation Menu Clicks ---
-
     }
 
+    /**
+     * Called when the view hierarchy is being destroyed.
+     * Sets binding to null to avoid memory leaks.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
-        // Clean up the binding object to avoid memory leaks
         _binding = null
     }
 }

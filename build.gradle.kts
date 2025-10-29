@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
     id("com.google.gms.google-services") version "4.4.2" apply false // <-- ENSURE THIS LINE IS PRESENT
+    //id("androidx.navigation.safeargs.kotlin") version "2.7.7" apply false
 }

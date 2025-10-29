@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     id("com.google.gms.google-services")
     id("androidx.navigation.safeargs.kotlin")
-}
 
+}
 android {
     namespace = "com.akash.netrameds"
     compileSdk = 36
@@ -49,7 +49,7 @@ dependencies {
     // Core & UI
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.material) // Material is already here
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.concurrent:concurrent-futures-ktx:1.1.0")
@@ -58,22 +58,29 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
 
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+// Gson Converter - Converts JSON to Kotlin data classes
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+// OkHttp Logging Interceptor (Very useful for debugging network calls)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+// Coroutine support (for making calls in the background)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
     // ViewModel & LiveData (MVVM)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.livedata.ktx)
 
-    // Room Database
+    // Room Database (Corrected and de-duplicated)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
-
-
+    kapt(libs.room.compiler) // This is the correct way for your setup
 
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
-    implementation(libs.google.auth) // This should be 'libs.play.services.auth' from your version catalog
+    implementation(libs.google.auth)
 
     // CameraX
     implementation(libs.camera.core)
@@ -83,23 +90,23 @@ dependencies {
 
     // ML Kit
     implementation(libs.mlkit.text.recognition)
-    // REMOVED: Redundant dependency, as it's a transitive dependency of other Play Services libraries.
-    // implementation("com.google.android.gms:play-services-base:18.4.0")
 
     // Coil Image Loading
     implementation(libs.coil)
+
+    implementation("com.google.guava:guava:33.0.0-android")
+
+    // ... rest of your dependencies
+    implementation("androidx.concurrent:concurrent-futures-ktx:1.1.0")
+
+    // Jetpack Navigation
+    implementation(libs.navigation.fragment.ktx)
+
 
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-//    implementation("androidx.room:room-runtime:2.6.1")
-//    implementation("androidx.room:room-ktx:2.6.1")
-//    ksp("androidx.room:room-compiler:2.6.1") // Use ksp instead of kapt
-
-// Use ksp instead of kapt
-
-// Use ksp instead of kapt
-
+    // ALL THE REDUNDANT DEPENDENCIES BELOW HAVE BEEN REMOVED.
 }

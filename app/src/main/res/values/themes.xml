@@ -1,15 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.NetraMeds" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <style name="Theme.NetraMeds" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/my_light_primary</item>
         <item name="colorPrimaryVariant">@color/my_light_primary_variant</item>
         <item name="colorOnPrimary">@color/my_light_onPrimary</item>
-
     </style>
 
-    <style name="Theme.NetraMeds" parent="Base.Theme.NetraMeds" />
+    <style name="Theme.NetraMeds.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
+    </style>
+
+
     <style name="SettingsHeader" parent="Widget.AppCompat.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -18,8 +18,8 @@
     </style>
 
     <style name="SettingsItem">
-        <!-- Define attributes for this style -->
     </style>
+
     <style name="SettingsItemText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -33,23 +33,17 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <!-- Inside the <resources> tag -->
-
-
-    <!-- Inside the <resources> tag -->
-    <style name="AppTheme.NumberPicker" parent="Theme.MaterialComponents.DayNight">
-        <!-- The parent is now MaterialComponents, not AppCompat -->
+    <style name="AppTheme.NumberPicker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:textColorPrimary">?attr/colorOnSurface</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <!-- Use a color that is guaranteed to be visible on your app's background -->
-        <item name="android:colorControlNormal">?attr/colorPrimary</item>
     </style>
-
 
 
     <style name="SettingsSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+
 </resources>

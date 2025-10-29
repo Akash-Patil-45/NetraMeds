@@ -50,8 +50,8 @@
 
         <!-- Actions for the module cards -->
         <action
-            android:id="@+id/action_homeFragment_to_scanFragment"
-            app:destination="@id/scanFragment" />
+            android:id="@+id/action_homeFragment_to_scanMedicineFragment"
+            app:destination="@id/scanMedicineFragment" />
         <action
             android:id="@+id/action_homeFragment_to_alarmsFragment"
             app:destination="@id/alarmsFragment" />
@@ -63,9 +63,6 @@
             android:id="@+id/action_homeFragment_to_supportFragment"
             app:destination="@id/supportFragment" />
 
-        <action
-            android:id="@+id/action_homeFragment_to_scanMedicineFragment"
-            app:destination="@id/scanMedicineFragment" />
         <!-- ADD THIS ACTION to go to the Create Alarm page -->
         <action
             android:id="@+id/action_homeFragment_to_createAlarmFragment"
@@ -172,39 +169,52 @@
             app:destination="@id/summaryFragment" />
     </fragment>
 
+
+
     <fragment
         android:id="@+id/summaryFragment"
         android:name="com.akash.netrameds.features.alarm.SummaryFragment"
-        android:label="SummaryFragment"
-        tools:layout="@layout/fragment_summary">
-        <argument android:name="medicineName" app:argType="string" />
-        <argument android:name="medicineType" app:argType="string" />
-        <argument android:name="dosage" app:argType="string" />
-        <argument android:name="selectedDays" app:argType="string[]" />
-        <argument android:name="alarmTimes" app:argType="string[]" />
-        <action
-            android:id="@+id/action_summaryFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+        android:label="fragment_summary"
+        tools:layout="@layout/fragment_summary" >
+        <argument
+            android:name="medicineName"
+            app:argType="string" />
+        <argument
+            android:name="medicineType"
+            app:argType="string" />
+        <argument
+            android:name="dosage"
+            app:argType="string" />
+        <argument
+            android:name="selectedDays"
+            app:argType="string[]" />
+        <argument
+            android:name="alarmTimes"
+            app:argType="string[]" />
     </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.akash.netrameds.features.settings.SettingsFragment"
-        android:label="SettingsFragment"
+        android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/scanMedicineFragment"
-        android:name="com.akash.netrameds.features.scan.ScanMedicineFragment"
+        android:name="com.akash.netrameds.features.scan.ScanFragment"
         android:label="fragment_scan_medicine"
-        tools:layout="@layout/fragment_scan_medicine" />
+        tools:layout="@layout/fragment_scan_medicine" >
+
+    </fragment>
+
+
+
+
+
 
 
     <!-- Placeholder fragments for the modules -->
-    <fragment
-        android:id="@+id/scanFragment"
-        android:name="com.akash.netrameds.features.scan.ScanFragment"
-        android:label="ScanFragment" />
+
     <fragment
         android:id="@+id/alarmsFragment"
         android:name="com.akash.netrameds.features.alarms.AlarmsFragment"
