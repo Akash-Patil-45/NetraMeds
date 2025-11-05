@@ -15,7 +15,7 @@ import com.akash.netrameds.model.Alarm
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        // Always reschedule the next alarm first
+        // Always reschedule the next alarm first (if it's a repeating alarm)
         rescheduleNextAlarm(context, intent)
 
         // Check for the "Draw over other apps" permission
@@ -67,21 +67,31 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private fun rescheduleNextAlarm(context: Context, intent: Intent) {
         val alarmId = intent.getIntExtra("EXTRA_ALARM_ID", -1)
+        val dayOrDate = intent.getStringExtra("EXTRA_DAY") ?: ""
+
         if (alarmId == -1) {
             Log.e("AlarmReceiver", "Invalid alarmId, cannot reschedule.")
             return
         }
-        val alarmToReschedule = Alarm(
-            id = alarmId,
-            medicineName = intent.getStringExtra("EXTRA_MEDICINE_NAME") ?: "",
-            medicineType = intent.getStringExtra("EXTRA_MEDICINE_TYPE") ?: "",
-            dosage = intent.getStringExtra("EXTRA_DOSAGE") ?: "",
-            day = intent.getStringExtra("EXTRA_DAY") ?: "",
-            hour = intent.getIntExtra("EXTRA_HOUR", 0),
-            minute = intent.getIntExtra("EXTRA_MINUTE", 0)
-        )
-        val scheduler = AlarmScheduler(context)
-        scheduler.schedule(alarmToReschedule)
-        Log.d("AlarmReceiver", "Rescheduled alarm ID: $alarmId")
+
+        // --- NEW LOGIC: Only reschedule if it's NOT a specific date ---
+        if (dayOrDate.contains("-")) {
+            Log.d("AlarmReceiver", "One-time alarm finished. Not rescheduling.")
+            // This was a one-time date alarm, so we do nothing.
+        } else {
+            // This is a repeating day-of-week alarm, so reschedule it.
+            val alarmToReschedule = Alarm(
+                id = alarmId,
+                medicineName = intent.getStringExtra("EXTRA_MEDICINE_NAME") ?: "",
+                medicineType = intent.getStringExtra("EXTRA_MEDICINE_TYPE") ?: "",
+                dosage = intent.getStringExtra("EXTRA_DOSAGE") ?: "",
+                day = dayOrDate,
+                hour = intent.getIntExtra("EXTRA_HOUR", 0),
+                minute = intent.getIntExtra("EXTRA_MINUTE", 0)
+            )
+            val scheduler = AlarmScheduler(context)
+            scheduler.schedule(alarmToReschedule)
+            Log.d("AlarmReceiver", "Rescheduled repeating alarm ID: $alarmId for next week.")
+        }
     }
 }

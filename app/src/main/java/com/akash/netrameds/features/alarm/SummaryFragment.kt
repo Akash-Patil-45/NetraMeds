@@ -3,10 +3,11 @@ package com.akash.netrameds.features.alarm
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.provider.Settings
 import android.graphics.Typeface
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
@@ -28,7 +29,6 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import android.net.Uri
 
 class SummaryFragment : Fragment() {
     private var _binding: FragmentSummaryBinding? = null
@@ -53,18 +53,32 @@ class SummaryFragment : Fragment() {
 
     private fun displaySummary() {
         val summaryBuilder = SpannableStringBuilder()
+
         summaryBuilder.inSpans(StyleSpan(Typeface.BOLD)) { append("Medicine: ") }
         summaryBuilder.append("${args.medicineName} (${args.medicineType})\n\n")
+
         summaryBuilder.inSpans(StyleSpan(Typeface.BOLD)) { append("Dosage: ") }
         summaryBuilder.append("${args.dosage}\n\n")
+
+        // --- NEW LOGIC: Check if it's a date or repeating days ---
         val scheduleDays = args.selectedDays.joinToString(", ")
-        val scheduleText = if (scheduleDays.equals("sun,mon,tue,wed,thu,fri,sat", ignoreCase = true)) "Daily" else scheduleDays
-        summaryBuilder.inSpans(StyleSpan(Typeface.BOLD)) { append("Schedule: ") }
-        summaryBuilder.append("$scheduleText\n\n")
+        if (args.selectedDays.isNotEmpty() && args.selectedDays[0].contains("-")) {
+            // It's a specific date
+            summaryBuilder.inSpans(StyleSpan(Typeface.BOLD)) { append("Date: ") }
+            summaryBuilder.append("$scheduleDays\n\n")
+        } else {
+            // It's repeating days
+            val scheduleText = if (scheduleDays.equals("sun,mon,tue,wed,thu,fri,sat", ignoreCase = true)) "Daily" else scheduleDays
+            summaryBuilder.inSpans(StyleSpan(Typeface.BOLD)) { append("Schedule: ") }
+            summaryBuilder.append("$scheduleText\n\n")
+        }
+        // --- End of new logic ---
+
         val timesCount = args.alarmTimes.size
         val timesString = args.alarmTimes.joinToString("\n")
         summaryBuilder.inSpans(StyleSpan(Typeface.BOLD)) { append("Times ($timesCount per day):\n") }
         summaryBuilder.append(timesString)
+
         binding.fullSummaryText.text = summaryBuilder
     }
 
@@ -89,7 +103,6 @@ class SummaryFragment : Fragment() {
                     // Both permissions are granted, schedule the alarm.
                     scheduleAlarmsAndNavigateHome()
                 } else {
-                    // --- THIS IS THE MISSING LOGIC ---
                     // The exact alarm permission is denied, so ask for it.
                     Intent().apply {
                         action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
@@ -102,7 +115,6 @@ class SummaryFragment : Fragment() {
         }
     }
 
-    // --- ADD THIS HELPER FUNCTION ---
     private fun canScheduleExactAlarms(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -125,7 +137,7 @@ class SummaryFragment : Fragment() {
                         medicineName = args.medicineName,
                         medicineType = args.medicineType,
                         dosage = args.dosage,
-                        day = day,
+                        day = day, // This correctly passes either "Mon" or "2025-10-30"
                         hour = hour24,
                         minute = minute
                     )
