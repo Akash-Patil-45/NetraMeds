@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><androidx.constraintlayout.widget.ConstraintLayout
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -59,131 +60,39 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:contentPadding="16dp">
+                app:cardElevation="4dp">
 
-                <!-- Use a LinearLayout to hold multiple medication entries -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="100dp"
                     android:orientation="vertical">
 
-                    <!-- First Upcoming Medicine -->
-                    <RelativeLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/upcoming_alarms_recyclerview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/list_item_upcoming_alarm"
+                        tools:itemCount="2"
+                        tools:visibility="visible" />
 
-                        <ImageView
-                            android:id="@+id/medication_icon_1"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_pills"
-                            android:contentDescription="Medication Icon"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toEndOf="@id/medication_icon_1"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/medication_name_1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Paracetamol"
-                                style="@style/TextAppearance.Material3.TitleMedium"
-                                android:textStyle="bold"/>
-
-                            <TextView
-                                android:id="@+id/medication_details_1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1 tablet • After breakfast"
-                                style="@style/TextAppearance.Material3.BodyMedium"
-                                android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/medication_time_1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:text="9:00 AM"
-                            style="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="?attr/colorPrimary"/>
-
-                    </RelativeLayout>
-
-                    <!-- Divider View to separate the items -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?attr/dividerHorizontal"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="12dp" />
-
-                    <!-- Second Upcoming Medicine -->
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/medication_icon_2"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_pills"
-                            android:contentDescription="Medication Icon"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toEndOf="@id/medication_icon_2"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="16dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/medication_name_2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Vitamin C"
-                                style="@style/TextAppearance.Material3.TitleMedium"
-                                android:textStyle="bold"/>
-
-                            <TextView
-                                android:id="@+id/medication_details_2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1 tablet • After lunch"
-                                style="@style/TextAppearance.Material3.BodyMedium"
-                                android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/medication_time_2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:text="1:30 PM"
-                            style="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="?attr/colorPrimary"/>
-
-                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/no_alarms_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="24dp"
+                        android:text="No upcoming alarms."
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
 
             <TextView
                 style="@style/TextAppearance.Material3.TitleLarge"
@@ -192,7 +101,6 @@
                 android:layout_marginTop="24dp"
                 android:text="Modules" />
 
-            <!-- Using two vertical LinearLayouts inside a horizontal one for a simple grid -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,7 +108,6 @@
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <!-- Left Column -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -215,7 +122,6 @@
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp"
                         app:cardUseCompatPadding="true">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -239,38 +145,35 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/medicine_history_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
+                        android:id="@+id/medicine_history_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="120dp"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_history"
-                            android:layout_gravity="center_horizontal"/>
-                        <TextView
-                            android:layout_width="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp"
+                        app:cardUseCompatPadding="true">
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Medicine History"
-                            android:layout_gravity="center_horizontal"
-                            android:textAlignment="center"
-                            android:layout_marginTop="8dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
+                            android:minHeight="120dp"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_history"
+                                android:layout_gravity="center_horizontal"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Medicine History"
+                                android:layout_gravity="center_horizontal"
+                                android:textAlignment="center"
+                                android:layout_marginTop="8dp"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <!-- Right Column -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -285,7 +188,6 @@
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp"
                         app:cardUseCompatPadding="true">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -308,7 +210,6 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Card for Support -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/support_card"
                         android:layout_width="match_parent"
@@ -316,7 +217,6 @@
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp"
                         app:cardUseCompatPadding="true">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

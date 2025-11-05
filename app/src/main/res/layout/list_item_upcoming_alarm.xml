@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="16dp">
+
+    <ImageView
+        android:id="@+id/medication_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_pills"
+        android:contentDescription="Medication Icon" />
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@id/cancel_button"
+        android:layout_toEndOf="@id/medication_icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/medicine_name_text"
+            style="@style/TextAppearance.Material3.TitleMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            tools:text="Paracetamol (Mon)" />
+
+        <TextView
+            android:id="@+id/medicine_details_text"
+            style="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="1 tablet • 09:00 AM" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/cancel_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Cancel Alarm"
+        android:src="@drawable/ic_cancel"
+        app:tint="?attr/colorError" />
+
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/cancel_button"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Edit Alarm"
+        android:src="@drawable/ic_edit"
+        app:tint="?attr/colorPrimary" />
+
+</RelativeLayout>
