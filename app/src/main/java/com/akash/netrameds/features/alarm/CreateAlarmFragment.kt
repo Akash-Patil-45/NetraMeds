@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.akash.netrameds.databinding.FragmentCreateAlarmBinding
 
@@ -13,6 +14,19 @@ class CreateAlarmFragment : Fragment() {
 
     private var _binding: FragmentCreateAlarmBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Listen for results from ScanFragment
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            val medicineName = bundle.getString("medicineName")
+            if (!medicineName.isNullOrEmpty()) {
+                // Navigate to SelectMedicineTypeFragment with the captured name
+                val action = CreateAlarmFragmentDirections.actionCreateAlarmFragmentToSelectMedicineTypeFragment(medicineName)
+                findNavController().navigate(action)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,25 +39,20 @@ class CreateAlarmFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // --- CLICK LISTENERS ARE ADDED HERE ---
-
-        // Set up the back button on the toolbar
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
-        // Set up the "Capture with Camera" card (with a placeholder action)
+        // --- CAPTURE MEDICINE BUTTON ---
         binding.captureMedicineCard.setOnClickListener {
-            Toast.makeText(requireContext(), "Camera feature coming soon!", Toast.LENGTH_SHORT).show()
+            // Navigate to ScanFragment with isForResult = true
+            val action = CreateAlarmFragmentDirections.actionCreateAlarmFragmentToScanMedicineFragment(isForResult = true)
+            findNavController().navigate(action)
         }
 
-        // Set up the "Fill Manually" card to navigate to the next page
+        // --- FILL MANUALLY BUTTON ---
         binding.fillManuallyCard.setOnClickListener {
-            // 1. Create the navigation action using the auto-generated Directions class.
-            //    This class is created by the Safe Args plugin based on your nav_graph.xml.
             val action = CreateAlarmFragmentDirections.actionCreateAlarmFragmentToAddMedicineNameFragment()
-
-            // 2. Tell the NavController to execute that action.
             findNavController().navigate(action)
         }
     }

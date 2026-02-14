@@ -23,16 +23,17 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat // <-- ADDED IMPORT
-import java.util.Calendar // <-- ADDED IMPORT
-import java.util.Locale // <-- ADDED IMPORT
-import java.util.TimeZone // <-- ADDED IMPORT
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    // Database and Adapter
     private lateinit var alarmDao: AlarmDao
     private lateinit var alarmScheduler: AlarmScheduler
     private lateinit var upcomingAlarmsAdapter: UpcomingAlarmsAdapter
@@ -42,8 +43,11 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        // Initialize DAO and Scheduler
         alarmDao = AppDatabase.getDatabase(requireContext()).alarmDao()
         alarmScheduler = AlarmScheduler(requireContext().applicationContext)
+
         return binding.root
     }
 
@@ -57,9 +61,10 @@ class HomeFragment : Fragment() {
         super.onResume()
         // Load or refresh alarms every time the user comes to this screen
         loadAlarms()
+        // Set the "Home" item as selected in the bottom nav
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
     }
 
-    // --- THIS FUNCTION IS NOW UPDATED ---
     private fun loadAlarms() {
         lifecycleScope.launch(Dispatchers.IO) {
             // Get current time details
@@ -72,7 +77,7 @@ class HomeFragment : Fragment() {
             val dayOfWeekFormatter = SimpleDateFormat("E", Locale.getDefault())
             val currentDayString = dayOfWeekFormatter.format(now.time)
 
-            // Get current date string (e.g., "2025-11-05")
+            // Get current date string (e.g., "2025-11-07")
             val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             dateFormatter.timeZone = TimeZone.getTimeZone("UTC") // Match the format from the date picker
             val currentDateString = dateFormatter.format(now.time)
@@ -83,7 +88,10 @@ class HomeFragment : Fragment() {
             // Filter the alarms in Kotlin
             val upcomingAlarms = allAlarms.filter { alarm ->
                 // 1. Check if the alarm is scheduled for today
-                val isRepeatingDay = alarm.day.equals(currentDayString, ignoreCase = true)
+                // Check repeating day (e.g., "Wed") or "Daily"
+                val isRepeatingDay = alarm.day.equals(currentDayString, ignoreCase = true) ||
+                        alarm.day.equals("sun,mon,tue,wed,thu,fri,sat", ignoreCase = true)
+                // Check specific date (e.g., "2025-11-07")
                 val isSpecificDate = alarm.day == currentDateString
                 val isForToday = isRepeatingDay || isSpecificDate
 
@@ -101,7 +109,7 @@ class HomeFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (upcomingAlarms.isEmpty()) {
                     // Show "No alarms" text and hide the list
-                    binding.noAlarmsText.text = "No upcoming alarms today." // Specific message
+                    binding.noAlarmsText.text = "No upcoming alarms today."
                     binding.noAlarmsText.visibility = View.VISIBLE
                     binding.upcomingAlarmsRecyclerview.visibility = View.GONE
                 } else {
@@ -117,8 +125,9 @@ class HomeFragment : Fragment() {
     private fun setupRecyclerView() {
         upcomingAlarmsAdapter = UpcomingAlarmsAdapter(
             onEditClick = { alarm ->
-                Toast.makeText(requireContext(), "Please create a new alarm and cancel the old one.", Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_homeFragment_to_createAlarmFragment)
+                // --- THIS IS THE EDIT BUTTON LOGIC ---
+                // "Edit" on the home screen just navigates to the full list
+                findNavController().navigate(R.id.action_homeFragment_to_alarmsFragment)
             },
             onCancelClick = { alarm ->
                 showCancelConfirmationDialog(alarm)
@@ -132,20 +141,54 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        // Top Right Settings Button
         binding.settingsButton.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }
+
+        // "See All Alarms" Text Link
+        binding.allAlarmsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_alarmsFragment)
+        }
+
+        // Dashboard Cards
         binding.medicineRecognitionCard.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_scanMedicineFragment)
         }
         binding.medicineHistoryCard.setOnClickListener {
-            Toast.makeText(requireContext(), "Medicine History clicked!", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_homeFragment_to_medicineHistoryFragment)
         }
         binding.smartAlarmCard.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_createAlarmFragment)
         }
         binding.supportCard.setOnClickListener {
-            Toast.makeText(requireContext(), "Support clicked!", Toast.LENGTH_SHORT).show()
+            // This action ID must exist in your nav_graph.xml
+            findNavController().navigate(R.id.action_homeFragment_to_supportFragment)
+        }
+
+        // Bottom Navigation Bar Logic
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> true // Already on home screen
+                R.id.nav_alarms -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_alarmsFragment)
+                    true
+                }
+                R.id.nav_scan -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_scanMedicineFragment)
+                    true
+                }
+                R.id.nav_history -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_medicineHistoryFragment)
+                    true
+                }
+                // --- ADDED: Handle Settings Click ---
+                R.id.nav_settings -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+                    true
+                }
+                else -> false
+            }
         }
     }
 

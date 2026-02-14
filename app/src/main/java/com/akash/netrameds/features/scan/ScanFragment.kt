@@ -1,5 +1,3 @@
-// In com/akash/netrameds/features/scan/ScanFragment.kt
-
 package com.akash.netrameds.features.scan
 
 import android.Manifest
@@ -13,7 +11,7 @@ import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import android.view.View
-import android.widget.Button // Import this
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -28,10 +26,19 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController // Import this
+import androidx.lifecycle.lifecycleScope // <-- ADD THIS IMPORT
+import androidx.navigation.fragment.findNavController
 import com.akash.netrameds.R
+import com.akash.netrameds.data.AppDatabase // <-- ADD THIS IMPORT
+import com.akash.netrameds.data.ScanHistoryDao // <-- ADD THIS IMPORT
+import com.akash.netrameds.model.ScanHistory // <-- ADD THIS IMPORT
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+import java.util.Calendar // <-- ADD THIS IMPORT
+import kotlinx.coroutines.launch // <-- ADD THIS IMPORT
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
+import androidx.navigation.fragment.navArgs
 
 class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
 
@@ -42,11 +49,14 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
     private lateinit var brandNameTextView: TextView
     private lateinit var expiryDateTextView: TextView
     private lateinit var resultLayout: LinearLayout
-    private lateinit var doneButton: Button // Added Done button
+    private lateinit var doneButton: Button
 
     private val handler = Handler(Looper.getMainLooper())
     private var scanRunnable: Runnable? = null
     private var isScanLoopRunning = false
+
+    private lateinit var historyDao: ScanHistoryDao // <-- ADD THIS VARIABLE
+    private val args: ScanFragmentArgs by navArgs()
 
     private val activityResultLauncher =
         registerForActivityResult(
@@ -66,7 +76,11 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
         brandNameTextView = view.findViewById(R.id.brandNameTextView)
         expiryDateTextView = view.findViewById(R.id.expiryDateTextView)
         resultLayout = view.findViewById(R.id.result_layout)
-        doneButton = view.findViewById(R.id.done_button) // Find the Done button
+        doneButton = view.findViewById(R.id.done_button)
+
+        // --- ADDED: Initialize the DAO ---
+        historyDao = AppDatabase.getDatabase(requireContext()).scanHistoryDao()
+        // ---
 
         if (allPermissionsGranted()) {
             startCamera()
@@ -74,9 +88,8 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
             activityResultLauncher.launch(Manifest.permission.CAMERA)
         }
 
-        // Add click listener for the Done button
         doneButton.setOnClickListener {
-            findNavController().popBackStack() // Navigate back
+            findNavController().popBackStack()
         }
 
         viewModel.medicineData.observe(viewLifecycleOwner) { medicineData ->
@@ -85,7 +98,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
                 val expiryDate = medicineData.expiry_date ?: "Not found"
 
                 if (brandName != "Not found" && brandName.isNotEmpty()) {
-                    // Medicine found: stop loop, update text, announce
+                    // --- MEDICINE FOUND ---
                     stopAutoScanLoop()
                     brandNameTextView.text = brandName
                     expiryDateTextView.text = expiryDate
@@ -94,8 +107,25 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
                     view.announceForAccessibility(announcement)
                     resultLayout.contentDescription = announcement
 
+                    // --- ADDED: Save the successful scan to history ---
+                    saveScanToHistory(brandName, expiryDate)
+
+                    if (args.isForResult) {
+                        // If called for a result (from Create Alarm), send result and go back
+                        setFragmentResult("requestKey", bundleOf("medicineName" to brandName))
+
+                        // We might want to show the user it was found before popping
+                        // For now, let's add a small delay or use the Done button logic
+                        // But for auto-redirect:
+                        findNavController().popBackStack()
+                    } else {
+                        // Standard mode: Save to history
+                        saveScanToHistory(brandName, medicineData.expiry_date ?: "")
+                    }
+                    // ---
+
                 } else {
-                    // Not found: continue loop, announce scanning
+                    // Not found: continue loop
                     brandNameTextView.text = "Scanning..."
                     expiryDateTextView.text = "..."
                     view.announceForAccessibility("Scanning...")
@@ -116,6 +146,20 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
             }
         }
     }
+
+    // --- ADDED: This function saves the scan result to the Room database ---
+    private fun saveScanToHistory(medicineName: String, expiryDate: String) {
+        lifecycleScope.launch {
+            val newHistoryItem = ScanHistory(
+                medicineName = medicineName,
+                expiryDate = expiryDate, // e.g., "10/2026"
+                scanTimestamp = Calendar.getInstance().timeInMillis // The current time
+            )
+            historyDao.insert(newHistoryItem)
+            Log.d("ScanFragment", "Successfully saved to scan history: $medicineName")
+        }
+    }
+    // ---
 
     private fun allPermissionsGranted() = ContextCompat.checkSelfPermission(
         requireContext(), Manifest.permission.CAMERA
@@ -142,11 +186,11 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
+    // ... (rest of the file: start/stop scan loop, takePhoto, onDestroy, helpers) ...
     private fun startAutoScanLoop() {
         Log.d("ScanFragment", "Starting auto-scan loop")
         view?.announceForAccessibility("Scanning for medicine details.")
         resultLayout.contentDescription = "Scanning for medicine details."
-
         isScanLoopRunning = true
         scanRunnable = Runnable {
             if (!isScanLoopRunning) return@Runnable
@@ -164,12 +208,11 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
 
     private fun scheduleNextScan() {
         if (!isScanLoopRunning) return
-        scanRunnable?.let { handler.postDelayed(it, 1500) } // Using 1.5 second delay
+        scanRunnable?.let { handler.postDelayed(it, 1500) }
     }
 
     private fun takePhoto() {
         val imageCapture = this.imageCapture ?: return
-
         imageCapture.takePicture(
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageCapturedCallback() {
@@ -194,23 +237,17 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
         stopAutoScanLoop()
     }
 
-    // --- HELPER FUNCTIONS ---
     private fun imageProxyToBitmap(image: ImageProxy): Bitmap {
         val buffer: ByteBuffer = image.planes[0].buffer
         val bytes = ByteArray(buffer.remaining())
         buffer.get(bytes)
-
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-
         val rotationDegrees = image.imageInfo.rotationDegrees
-
         if (rotationDegrees == 0) {
             return bitmap
         }
-
         val matrix = Matrix()
         matrix.postRotate(rotationDegrees.toFloat())
-
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
@@ -224,20 +261,16 @@ class ScanFragment : Fragment(R.layout.fragment_scan_medicine) {
     private fun resizeBitmap(bitmap: Bitmap, maxSize: Int): Bitmap {
         val width = bitmap.width
         val height = bitmap.height
-
         if (width <= maxSize && height <= maxSize) {
             return bitmap
         }
-
         val ratio: Float = if (width > height) {
             maxSize.toFloat() / width
         } else {
             maxSize.toFloat() / height
         }
-
         val newWidth = (width * ratio).toInt()
         val newHeight = (height * ratio).toInt()
-
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
     }
 }

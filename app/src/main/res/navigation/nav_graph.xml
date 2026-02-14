@@ -78,6 +78,13 @@
     <action
         android:id="@+id/action_createAlarmFragment_to_addMedicineNameFragment"
         app:destination="@id/addMedicineNameFragment" />
+        <action
+            android:id="@+id/action_createAlarmFragment_to_scanMedicineFragment"
+            app:destination="@id/scanMedicineFragment" />
+
+        <action
+            android:id="@+id/action_createAlarmFragment_to_selectMedicineTypeFragment"
+            app:destination="@id/selectMedicineTypeFragment" />
     </fragment>
 
     <!-- Placeholder fragment for Settings -->
@@ -171,6 +178,7 @@
 
 
 
+
     <fragment
         android:id="@+id/summaryFragment"
         android:name="com.akash.netrameds.features.alarm.SummaryFragment"
@@ -204,7 +212,10 @@
         android:name="com.akash.netrameds.features.scan.ScanFragment"
         android:label="fragment_scan_medicine"
         tools:layout="@layout/fragment_scan_medicine" >
-
+        <argument
+            android:name="isForResult"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
 
@@ -215,10 +226,20 @@
 
     <!-- Placeholder fragments for the modules -->
 
+
+
     <fragment
         android:id="@+id/alarmsFragment"
         android:name="com.akash.netrameds.features.alarms.AlarmsFragment"
-        android:label="AlarmsFragment" />
+        android:label="fragment_all_alarms"
+        tools:layout="@layout/fragment_all_alarms" >
+
+        <action
+            android:id="@+id/action_alarmsFragment_to_createAlarmFragment"
+            app:destination="@id/createAlarmFragment"
+            app:popUpTo="@id/homeFragment" />
+
+    </fragment>
     <fragment
         android:id="@+id/medicineHistoryFragment"
         android:name="com.akash.netrameds.features.history.MedicineHistoryFragment"
